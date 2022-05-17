@@ -24,7 +24,7 @@ app.use(express.json()); //para que express entienda el req.body como objeto jso
 //   },
 // ];
 
-// 
+//
 const objeto = {
   description: "Productos",
   items: [
@@ -60,15 +60,13 @@ app.post("/", (req, res) => {
   }
 });
 
-
-
 // Crear endpoint para poder actualizar un producto
 
 app.put("/:id", (req, res) => {
   const found = objeto.items.some((objeto) => objeto.id === +req.params.id);
   if (found) {
     objeto.items.forEach((objeto) => {
-        console.log(objeto.id)
+      console.log(objeto.id);
       if (+req.params.id === objeto.id) {
         objeto.nombre = req.body.nombre ? req.body.nombre : objeto.nombre;
         objeto.precio = req.body.precio ? req.body.precio : objeto.precio;
@@ -79,11 +77,6 @@ app.put("/:id", (req, res) => {
     res.status(404).send(`Product with id ${req.params.id} not found`);
   }
 });
-
-
-
-
-
 
 //Crear endpoint para poder eliminar un producto
 
@@ -107,10 +100,14 @@ app.delete("/:id", (req, res) => {
 app.get("/:precio", (req, res) => {
   //con el + delante convertimos una string en un numero
   console.log(req.params);
-  const found = objeto.items.some((objeto) => objeto.precio === +req.params.precio); // devuelve true o false
+  const found = objeto.items.some(
+    (objeto) => objeto.precio === +req.params.precio
+  ); // devuelve true o false
   console.log(found);
   if (found) {
-    res.send(objeto.items.filter((objeto) => objeto.precio === +req.params.precio));
+    res.send(
+      objeto.items.filter((objeto) => objeto.precio === +req.params.precio)
+    );
   } else {
     res.status(404).send(`Product with price ${req.params.precio} not found`);
   }
@@ -118,29 +115,26 @@ app.get("/:precio", (req, res) => {
 
 //Crear filtro que muestre los productos con un precio entre 50 y 250.
 
-app.get("/Range", (req, res) => {
+app.get("/productos/between50-250", (req, res) => {
   console.log(req.params);
-  const found = objeto.items.some((objeto) => objeto.precio > 50 && objeto.precio < 250); // devuelve true o false
-  console.log(found);
-  if (found) {
-    res.send(found
-    // objeto.items.filter((objeto) => objeto.precio === +req.params.precio)
-    );
+  const filteredItems = objeto.items.filter(
+    (objeto) => objeto.precio > 50 && objeto.precio < 250
+  ); // devuelve true o false
+  if (filteredItems.length > 0) {
+    res.send(filteredItems);
   } else {
     res.status(404).send(`Product with price ${req.params.precio} not found`);
   }
 });
 
-
 //Crear un filtro que cuando busque en postman por parámetro el id de un producto me devuelva ese producto
 
-app.get("/:id", (req, res) => {
+app.get("/productos/:id([0-9]+)", (req, res) => {
   const found = objeto.items.some((objeto) => objeto.id === +req.params.id);
   if (found) {
     objeto.items.forEach((objeto) => {
       console.log(objeto.id);
       if (+req.params.id === objeto.id) {
-
         res.send(objeto);
       }
     });
@@ -149,9 +143,6 @@ app.get("/:id", (req, res) => {
   }
 });
 
-
-
 app.listen(port, (req, res) => {
   console.log(`Servidor levantado en el puerto ${port}`);
 });
-
